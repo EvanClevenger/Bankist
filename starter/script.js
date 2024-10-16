@@ -90,11 +90,17 @@ const displayMovements = function (movements) {
     containerMovements.insertAdjacentHTML('afterbegin', html); //afterbegin allows newest child el to be on top
   });
 };
-
 displayMovements(account1.movements);
 
-//creating username
+//current balance
+const calcDisplayBalance = function (transaction) {
+  const balance = movements.reduce((acc, transaction) => acc + transaction, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
 
+calcDisplayBalance(account1.movements);
+
+//creating username
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
     acc.username = acc.owner
@@ -104,9 +110,7 @@ const createUsernames = function (accs) {
       .join('');
   });
 };
-
 createUsernames(accounts);
-console.log(accounts);
 
 /////////////////////////////////////////////////
 
@@ -158,4 +162,33 @@ console.log(accounts);
 // currenciesUnique.forEach(function (value, _, map) {
 // console.log(`${value}: ${value}`);
 // });
+//
+
+// const deposits = movements.filter(function (mov) {
+// return mov > 0;
+// });
+// console.log(deposits);
+//
+// const depositss = [];
+// for (const mov of movements) if (mov > 0) depositss.push(mov);
+// console.log(depositss);
+//
+// const withdrawals = movements.filter(mov => mov < 0);
+// console.log(withdrawals);
+
+//console.log(movements);
+//accumulator is like a snowball
+// const balance = movements.reduce(function (accumulator, current, i, arr) {
+// console.log(`Iteration ${i} : ${accumulator}`);
+// return accumulator + current;
+// }, 0); // 0 is the initial value
+//
+
+// const balance = movements.reduce((acc, cur) => acc + cur, 0);
+//
+// console.log(balance);
+//
+// let balance2 = 0;
+// for (const mov of movements) balance2 += mov;
+// console.log(balance2);
 //
