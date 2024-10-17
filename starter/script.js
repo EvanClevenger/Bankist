@@ -85,7 +85,7 @@ const displayMovements = function (movements) {
       <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div> 
-      <div class="movements__value">${mov}</div>
+      <div class="movements__value">${mov}€</div>
     </div>  `;
     containerMovements.insertAdjacentHTML('afterbegin', html); //afterbegin allows newest child el to be on top
   });
@@ -95,10 +95,33 @@ displayMovements(account1.movements);
 //current balance
 const calcDisplayBalance = function (transaction) {
   const balance = movements.reduce((acc, transaction) => acc + transaction, 0);
-  labelBalance.textContent = `${balance} EUR`;
+  labelBalance.textContent = `${balance}€`;
 };
 
 calcDisplayBalance(account1.movements);
+
+//Display summary
+const calcDisplaySummary = function (movements) {
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes}€`;
+
+  const expenses = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(expenses)}€`;
+
+  const interestRate = movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100, 0)
+    .filter((int, i, arr) => {
+      return int >= 1;
+    })
+    .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = `${interestRate}€`;
+};
+calcDisplaySummary(account1.movements);
 
 //creating username
 const createUsernames = function (accs) {
@@ -164,9 +187,9 @@ createUsernames(accounts);
 // });
 //
 
-// const deposits = movements.filter(function (mov) {
-// return mov > 0;
-// });
+const deposits = movements.filter(function (mov) {
+  return mov > 0;
+});
 // console.log(deposits);
 //
 // const depositss = [];
@@ -177,11 +200,11 @@ createUsernames(accounts);
 // console.log(withdrawals);
 
 //console.log(movements);
-//accumulator is like a snowball
-// const balance = movements.reduce(function (accumulator, current, i, arr) {
+// accumulator is like a snowball
+//const balance = movements.reduce(function (accumulator, current, i, arr) {
 // console.log(`Iteration ${i} : ${accumulator}`);
-// return accumulator + current;
-// }, 0); // 0 is the initial value
+//  return accumulator + current;
+//}, 0); // 0 is the initial value
 //
 
 // const balance = movements.reduce((acc, cur) => acc + cur, 0);
@@ -192,3 +215,35 @@ createUsernames(accounts);
 // for (const mov of movements) balance2 += mov;
 // console.log(balance2);
 //
+
+//maximum value
+// const max = movements.reduce((acc, mov) => {
+// if (acc > mov) return acc;
+// else return mov;
+// }, movements[0]);
+// console.log(max);
+//
+
+//challenge 2
+// const DogAges1 = [5, 2, 4, 1, 15, 8, 3];
+// const DogAges2 = [16, 6, 10, 5, 6, 1, 4];
+//
+// const calcHumanYears = function (dogAges) {
+// const humanAges = dogAges
+// .map(ages => (ages <= 2 ? ages * 2 : ages * 2 + 16))
+// .filter(ages => ages > 18)
+// .reduce((acc, age, _, arr) => acc + age / arr.length, 0);
+// return humanAges;
+// };
+//
+// console.log(calcHumanYears(DogAges1));
+//
+// const euroTOusd = 1.1;
+//
+//Pipeline
+// const totalInUSD = movements
+// .filter(mov => mov > 0)
+// .map(mov => mov * euroTOusd)
+// .reduce((acc, mov) => acc + mov, 0);
+//
+// console.log(totalInUSD);
