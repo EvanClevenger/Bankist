@@ -191,6 +191,28 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  if (
+    (inputCloseUsername.value =
+      currentAccount.username &&
+      Number(inputClosePin.value) === currentAccount.pin)
+  ) {
+    const index = accounts.findIndex(
+      acc => acc.username === currentAccount.username
+    );
+    //delets account
+    accounts.splice(index, 1);
+
+    //hides UI
+    containerApp.style.opacity = 0;
+
+    //clears input form
+    inputCloseUsername.value = inputClosePin.value = '';
+  }
+});
+
 /////////////////////////////////////////////////
 
 // const arr = [23, 11, 64];
