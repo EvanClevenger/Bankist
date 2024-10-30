@@ -131,6 +131,7 @@ const createUsernames = function (accs) {
 };
 createUsernames(accounts);
 
+//function updates summary, balance & movements
 const updateUI = function (acc) {
   //Display movements
   displayMovements(acc.movements);
@@ -168,6 +169,7 @@ btnLogin.addEventListener('click', function (e) {
   }
 });
 
+//transfer btn
 btnTransfer.addEventListener('click', function (e) {
   e.preventDefault();
   const amount = Number(inputTransferAmount.value);
@@ -191,6 +193,23 @@ btnTransfer.addEventListener('click', function (e) {
   }
 });
 
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  //loan can be given if a single deposit is more than 10% of the loan request.
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // add movement
+    currentAccount.movements.push(amount);
+    //update UI
+    updateUI(currentAccount);
+    //clear input feild
+    inputLoanAmount.value = '';
+  }
+});
+
+// close btn
 btnClose.addEventListener('click', function (e) {
   e.preventDefault();
 
@@ -265,9 +284,9 @@ btnClose.addEventListener('click', function (e) {
 // });
 //
 
-const deposits = movements.filter(function (mov) {
-  return mov > 0;
-});
+// const deposits = movements.filter(function (mov) {
+// return mov > 0;
+// });
 // console.log(deposits);
 //
 // const depositss = [];
@@ -334,4 +353,61 @@ const deposits = movements.filter(function (mov) {
 //
 // const account = accounts.find(acc => acc.owner === 'Jessica Davis');
 // console.log(account);
+
+//some and every
+// console.log(movements);
+// console.log(movements.includes(-130)); //checks for equality, checks for only -130
+
+//some() will test for condition, any num above 0 return true
+// const anyDeposits = movements.some(mov => mov > 0);
+// console.log(anyDeposits);
+
+//Every , returns true only if all elements meet condition
+// console.log(movements.every(mov => mov > 0));
+// console.log(account4.movements.every(mov => mov > 0));
+
+//Flat, Flatmap
+// const arr = [[1, 2, 3], [4, 5, 6], 7, 8];
+// console.log(arr.flat()); //makes it all one array
 //
+// const arrDeep = [[[1, 2], 3], [4, [5, 6]], 7, 8];
+// console.log(arrDeep.flat(2));
+//
+//flat
+// const overallBalance = accounts
+// .map(acc => acc.movements)
+// .flat()
+// .reduce((acc, mov) => acc + mov, 0);
+//
+// console.log(overallBalance);
+//
+//flatMap
+// const overallBalance2 = accounts
+// .flatMap(acc => acc.movements)
+// .reduce((acc, mov) => acc + mov, 0);
+//
+// console.log(overallBalance2);
+//
+
+//sorting arrays with strings
+const owners = ['jonas', 'zach', 'adam', 'martha'];
+console.log(owners.sort());
+
+//Numbers
+console.log(movements);
+
+//return < 0 = A,B (keep order)
+//return > 0 = B,A (switch order)
+//ascending
+movements.sort((a, b) => {
+  if (a > b) return 1;
+  if (a < b) return -1;
+});
+console.log(movements);
+
+//decending
+movements.sort((a, b) => {
+  if (a > b) return -1;
+  if (a < b) return 1;
+});
+console.log(movements);
