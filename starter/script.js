@@ -73,6 +73,11 @@ const currencies = new Map([
 //
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
+const currentDate = function () {
+  labelDate.textContent = new Date().toLocaleDateString();
+};
+currentDate();
+
 //Creates transaction history
 const displayMovements = function (movements) {
   containerMovements.innerHTML = ''; //removes placeholder HTML
@@ -399,10 +404,14 @@ console.log(movements);
 //return < 0 = A,B (keep order)
 //return > 0 = B,A (switch order)
 //ascending
-movements.sort((a, b) => {
-  if (a > b) return 1;
-  if (a < b) return -1;
-});
+// movements.sort((a, b) => {
+// if (a > b) return 1;
+// if (a < b) return -1;
+// });
+// console.log(movements);
+
+//ascending as well
+movements.sort((a, b) => a - b);
 console.log(movements);
 
 //decending
