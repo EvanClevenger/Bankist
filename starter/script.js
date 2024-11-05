@@ -79,10 +79,13 @@ const currentDate = function () {
 currentDate();
 
 //Creates transaction history
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = ''; //removes placeholder HTML
 
-  movements.forEach(function (mov, i) {
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  //if sort is true then ...
+
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
 
     const html = `
@@ -235,6 +238,13 @@ btnClose.addEventListener('click', function (e) {
     //clears input form
     inputCloseUsername.value = inputClosePin.value = '';
   }
+});
+
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted; //allows the toggle
 });
 
 /////////////////////////////////////////////////
@@ -395,11 +405,11 @@ btnClose.addEventListener('click', function (e) {
 //
 
 //sorting arrays with strings
-const owners = ['jonas', 'zach', 'adam', 'martha'];
-console.log(owners.sort());
+// const owners = ['jonas', 'zach', 'adam', 'martha'];
+// console.log(owners.sort());
 
 //Numbers
-console.log(movements);
+// console.log(movements);
 
 //return < 0 = A,B (keep order)
 //return > 0 = B,A (switch order)
@@ -411,12 +421,32 @@ console.log(movements);
 // console.log(movements);
 
 //ascending as well
-movements.sort((a, b) => a - b);
-console.log(movements);
-
+// movements.sort((a, b) => a - b);
+// console.log(movements);
+//
 //decending
-movements.sort((a, b) => {
-  if (a > b) return -1;
-  if (a < b) return 1;
-});
-console.log(movements);
+// movements.sort((a, b) => {
+// if (a > b) return -1;
+// if (a < b) return 1;
+// });
+// console.log(movements);
+//
+
+//Empty arrays + fill method
+const arr = [1, 2, 3, 4, 5, 6, 7];
+const x = new Array(7);
+console.log(x);
+
+// x.fill(1);
+x.fill(1, 3, 5);
+console.log(x);
+
+arr.fill(23, 4, 6);
+console.log(arr);
+
+//array.from
+const y = Array.from({ length: 7 }, () => 1);
+console.log(y);
+
+const z = Array.from({ length: 7 }, (_, i) => i + 1);
+console.log(z);
