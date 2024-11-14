@@ -1,15 +1,24 @@
 'use strict';
 
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
-// BANKIST APP
-
 // Data
 const account1 = {
   owner: 'Jonas Schmedtmann',
-  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
-  interestRate: 1.2, // %
+  movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
+  interestRate: 1.2,
   pin: 1111,
+
+  movementsDates: [
+    '2019-11-18T21:31:17.178Z',
+    '2019-12-23T07:42:02.383Z',
+    '2020-01-28T09:15:04.904Z',
+    '2020-04-01T10:17:24.185Z',
+    '2020-05-08T14:11:59.604Z',
+    '2020-05-27T17:01:17.194Z',
+    '2020-07-11T23:36:17.929Z',
+    '2020-07-12T10:51:36.790Z',
+  ],
+  currency: 'EUR',
+  locale: 'pt-PT', // de-DE
 };
 
 const account2 = {
@@ -17,23 +26,22 @@ const account2 = {
   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
   interestRate: 1.5,
   pin: 2222,
+
+  movementsDates: [
+    '2019-11-01T13:15:33.035Z',
+    '2019-11-30T09:48:16.867Z',
+    '2019-12-25T06:04:23.907Z',
+    '2020-01-25T14:18:46.235Z',
+    '2020-02-05T16:33:06.386Z',
+    '2020-04-10T14:43:26.374Z',
+    '2020-06-25T18:49:59.371Z',
+    '2020-07-26T12:01:20.894Z',
+  ],
+  currency: 'USD',
+  locale: 'en-US',
 };
 
-const account3 = {
-  owner: 'Steven Thomas Williams',
-  movements: [200, -200, 340, -300, -20, 50, 400, -460],
-  interestRate: 0.7,
-  pin: 3333,
-};
-
-const account4 = {
-  owner: 'Sarah Smith',
-  movements: [430, 1000, 700, 50, 90],
-  interestRate: 1,
-  pin: 4444,
-};
-
-const accounts = [account1, account2, account3, account4];
+const accounts = [account1, account2];
 
 // Elements
 const labelWelcome = document.querySelector('.welcome');
@@ -93,7 +101,7 @@ const displayMovements = function (movements, sort = false) {
       <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div> 
-      <div class="movements__value">${mov}€</div>
+      <div class="movements__value">${mov.toFixed(2)}€</div>
     </div>  `;
     containerMovements.insertAdjacentHTML('afterbegin', html); //afterbegin allows newest child el to be on top
   });
@@ -102,7 +110,7 @@ const displayMovements = function (movements, sort = false) {
 //current balance
 const calcDisplayBalance = function (acc) {
   acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance}€`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 //Display summary
@@ -110,12 +118,12 @@ const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const expenses = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(expenses)}€`;
+  labelSumOut.textContent = `${Math.abs(expenses.toFixed(2))}€`;
 
   const interestRate = acc.movements
     .filter(mov => mov > 0)
@@ -124,7 +132,7 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${interestRate}€`;
+  labelSumInterest.textContent = `${interestRate.toFixed(2)}€`;
 };
 
 //creating username and adds to accounts array
@@ -204,7 +212,7 @@ btnTransfer.addEventListener('click', function (e) {
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
 
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(inputLoanAmount.value);
 
   //loan can be given if a single deposit is more than 10% of the loan request.
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
@@ -433,20 +441,236 @@ btnSort.addEventListener('click', function (e) {
 //
 
 //Empty arrays + fill method
-const arr = [1, 2, 3, 4, 5, 6, 7];
-const x = new Array(7);
-console.log(x);
-
-// x.fill(1);
-x.fill(1, 3, 5);
-console.log(x);
-
-arr.fill(23, 4, 6);
-console.log(arr);
-
+// const arr = [1, 2, 3, 4, 5, 6, 7];
+// const x = new Array(7);
+// console.log(x);
+//
+//x.fill(1);
+// x.fill(1, 3, 5);
+// console.log(x);
+//
+// arr.fill(23, 4, 6);
+// console.log(arr);
+//
 //array.from
-const y = Array.from({ length: 7 }, () => 1);
-console.log(y);
+// const y = Array.from({ length: 7 }, () => 1);
+// console.log(y);
+//
+// const z = Array.from({ length: 7 }, (_, i) => i + 1);
+// console.log(z);
 
-const z = Array.from({ length: 7 }, (_, i) => i + 1);
-console.log(z);
+// labelBalance.addEventListener('click', function () {
+// const movementsUI = Array.from(
+// returns class into an array
+// document.querySelectorAll('.movements__value'),
+// el => Number(el.textContent.replace('€', '')) //mapping func turns array to a number
+// );
+// console.log(movementsUI);
+// });
+
+//1.
+// const bankDepositSum = accounts
+// .flatMap(acc => acc.movements) //sets elements into array
+// .filter(mov => mov > 0) //filters for el > 0
+// .reduce((sum, cur) => sum + cur, 0); //adds all el
+// console.log(bankDepositSum);
+//
+// 2. using filter
+// const numDepositsOver1000 = accounts
+// .flatMap(acc => acc.movements) //sets elements into array
+// .filter(num => num >= 1000).length; // filters el for more than 1000 and finds length
+// console.log(numDepositsOver1000);
+//
+// using reduce
+// const numDepositsOver1000_2 = accounts
+// .flatMap(acc => acc.movements) //sets el in array
+// .reduce((count, curr) => (curr >= 1000 ? count + 1 : count), 0);
+// .reduce((count, curr) => (curr >= 1000 ? ++count : count), 0);
+// console.log(numDepositsOver1000_2);
+//
+// 3.
+// const sums = accounts
+// .flatMap(acc => acc.movements)
+// .reduce(
+// (sums, curr) => {
+// curr > 0 ? (sums.deposit += curr) : (sums.withdrawls += curr);
+// sums[curr > 0 ? 'deposits' : 'withdrawls'] += curr;
+// return sums;
+// },
+// { deposit: 0, withdrawls: 0 }
+// );
+// console.log(sums);
+//
+// 4.str --> titleCase
+// this is a nice title --> This Is a Nice Title
+// const convertTitleCase = function (title) {
+// const capitalize = str => str[0].toUpperCase() + str.slice(1);
+//
+// const exceptions = ['a', 'an', 'and', 'the', 'but', 'or', 'on', 'in', 'with'];
+//
+// const titleCase = title
+// .toLowerCase()
+// .split(' ')
+// .map(word => (exceptions.includes(word) ? word : capitalize(word)))
+// .join(' ');
+//
+// return capitalize(titleCase);
+// };
+
+// console.log(convertTitleCase('this is a nice title'));
+// console.log(convertTitleCase('this is a LONG title, but not too long'));
+// console.log(
+// convertTitleCase('and here is another title, with another EXAMPLE')
+// );
+
+// challenge 4
+// const dogs = [
+// { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+// { weight: 8, curFood: 200, owners: ['Matilda'] },
+// { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+// { weight: 32, curFood: 340, owners: ['Michael'] },
+// ];
+//
+// 1.
+// dogs.forEach(dog => (dog.recommendFood = Math.trunc(dog.weight ** 0.75 * 28)));
+// console.log(dogs);
+//
+// 2.
+// const dogSarah = dogs.find(dog => dog.owners.includes('Sarah'));
+// console.log(dogSarah);
+// console.log(
+// `Sarah's dog is eating too ${
+// dogSarah.curFood > dogSarah.recommendFood ? 'much' : 'little'
+// }`
+// );
+//
+// 3.
+// const ownersFeedTooMuch = dogs
+// .filter(dog => dog.curFood > dog.recommendFood)
+// .map(dog => dog.owners)
+// .flat();
+// console.log(ownersFeedTooMuch);
+//
+// const ownersFeedTooLittle = dogs //filters for condition, maps for owners matching condition, makes new array from sub array elements
+// .filter(dog => dog.curFood < dog.recommendFood)
+// .map(dog => dog.owners)
+// .flat();
+// console.log(ownersFeedTooLittle);
+//
+// 4.
+// dogs.forEach(dog =>
+// dog.curFood > dog.recommendFood
+// ? console.log(`${dog.owners} is feeding thier dog too much food`)
+// : console.log(`${dog.owners} is feeding thier dog too little food`)
+// );
+
+// console.log(`${ownersFeedTooMuch.join(' and ')}'s dog eats to much!`);
+// console.log(`${ownersFeedTooLittle.join(' and ')}'s dog eats to little!`);
+//
+// 5.
+// dogs.forEach(dog =>
+// dog.curFood === dog.recommendFood
+// ? console.log(`${dog.owners} is feeding their dog the exact amount needed`)
+// : console.log(`No owners are feeding their dogs the exact amount`)
+// );
+// console.log(dogs.some(dog => dog.curFood === dog.recommendFood)); //asking for true or false
+//
+// 6.
+// const checkEatingOkay = dog =>
+// dog.curFood > dog.recommendFood * 0.9 &&
+// dog.curFood < dog.recommendFood * 1.1;
+//
+// console.log(dogs.some(checkEatingOkay)); //returns true or false
+//
+// 7.
+// console.log(dogs.filter(checkEatingOkay));
+// const ownerFeedingOkay = dogs
+// .filter(
+// dog =>
+// dog.curFood > dog.recommendFood * 0.9 &&
+// dog.curFood < dog.recommendFood * 1.1
+// )
+// .map(dog => dog.owners)
+// .flat();
+// console.log(ownerFeedingOkay);
+//
+//8.
+// const dogsSorted = dogs
+// .slice()
+// .sort((a, b) => a.recommendFood - b.recommendFood);
+// console.log(dogsSorted);
+
+//Numbers-Dates-Timers
+
+// console.log(23 === 23.0);
+
+//Base 10 is 0 --> 9
+//Binary Base 2 is 0 --> 1
+// console.log(0.1 + 0.2);
+
+//conversion
+// console.log(Number('23'));
+// console.log(+'23');
+//
+// parsing
+// console.log(Number.parseInt('30px'));
+// console.log(Number.parseInt('e23', 10));
+//
+// console.log(Number.parseInt('  2.5rem  '));
+// console.log(Number.parseFloat('  2.5rem  '));
+//
+// console.log(parseFloat('  2.5rem  '));
+//
+// Check if value is NaN
+// console.log(Number.isNaN(20));
+// console.log(Number.isNaN('20'));
+// console.log(Number.isNaN(+'20X'));
+// console.log(Number.isNaN(23 / 0));
+//
+// Checking if value is number
+// console.log(Number.isFinite(20));
+// console.log(Number.isFinite('20'));
+// console.log(Number.isFinite(+'20X'));
+// console.log(Number.isFinite(23 / 0));
+//
+// console.log(Number.isInteger(23));
+// console.log(Number.isInteger(23.0));
+// console.log(Number.isInteger(23 / 0));
+
+//square root
+// console.log(Math.sqrt(25));
+// console.log(25 ** (1 / 2));
+// console.log(8 ** (1 / 3));
+//max
+// console.log(Math.max(5, 18, 22, 11, 50));
+// console.log(Math.max(5, '18', 22, 11, 50));
+// console.log(Math.max(5, 18, '22px', 11, 50));
+
+// min
+// console.log(Math.min(5, 18, 22, 11, 50));
+//
+// console.log(Math.PI * Number.parseFloat('10px') ** 2);
+//
+// console.log(Math.trunc(Math.random() * 6) + 1);
+//
+// const randomInt = (min, max) =>
+// Math.floor(Math.random() * (max - min) + 1) + min;
+// 0.. 1 --> 0...(max-min) -> min...(max - min + min)
+// console.log(randomInt(2, 8));
+
+//Rounding integers
+// console.log(Math.trunc(23.2));
+// console.log(Math.round(23.8));
+
+// console.log(Math.ceil(23.3)); //always rounds us
+
+// console.log(Math.floor('23.8')); //always rounds down
+
+// console.log(Math.trunc(-23.8));
+// console.log(Math.floor(-23.8)); //rounding the opposite direction when negative
+
+//Floating points / rounding decimals
+// console.log((2.7).toFixed(0)); //returns string and rounds
+// console.log((2.7).toFixed(3));
+// console.log((2.345).toFixed(2));
+// console.log(+(2.7).toFixed(0)); // + converts string to a number
